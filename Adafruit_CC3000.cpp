@@ -668,6 +668,7 @@ bool Adafruit_CC3000::startSmartConfig(bool enableAES)
   //CC3KPrinter->println("Disconnecting");
   //Wait until CC3000 is disconnected
   while (ulCC3000Connected == WIFI_STATUS_CONNECTED) {
+    cc3k_int_poll();
     CHECK_SUCCESS(wlan_disconnect(),
                   "Failed to disconnect from AP", false);
     delay(10);
@@ -701,6 +702,7 @@ bool Adafruit_CC3000::startSmartConfig(bool enableAES)
   // Wait for smart config process complete (event in CC3000_UsynchCallback)
   while (ulSmartConfigFinished == 0)
   {
+    cc3k_int_poll();
     // waiting here for event SIMPLE_CONFIG_DONE
     timeout+=10;
     if (timeout > 60000)   // ~60s
@@ -746,6 +748,7 @@ bool Adafruit_CC3000::startSmartConfig(bool enableAES)
   timeout = 0;
   while(!ulCC3000Connected)
   {
+    cc3k_int_poll();
     if(timeout > WLAN_CONNECT_TIMEOUT) // ~20s
     {
       if (CC3KPrinter != 0) {
@@ -919,7 +922,8 @@ bool Adafruit_CC3000::connectSecure(char *ssid, char *key, int32_t secMode)
 void Adafruit_CC3000::connectToAP(char *ssid, char *key, uint8_t secmode) {
   int16_t timer = WLAN_CONNECT_TIMEOUT;
 
-  do {  
+  do {
+    cc3k_int_poll();
     /* MEME: not sure why this is absolutely required but the cc3k freaks
        if you dont. maybe bootup delay? */
     // Setup a 4 second SSID scan
@@ -955,6 +959,7 @@ void Adafruit_CC3000::connectToAP(char *ssid, char *key, uint8_t secmode) {
     if (CC3KPrinter != 0) CC3KPrinter->print(F("Waiting to connect..."));
     while ((timer > 0) && !checkConnected())
     {
+      cc3k_int_poll();
       delay(10);
       timer -= 10;
     }
@@ -1266,6 +1271,7 @@ int32_t Adafruit_CC3000_Client::close(void) {
 uint8_t Adafruit_CC3000_Client::read(void) 
 {
   while ((bufsiz <= 0) || (bufsiz == _rx_buf_idx)) {
+    cc3k_int_poll();
     // buffer in some more data
     bufsiz = recv(_socket, _rx_buf, sizeof(_rx_buf), 0);
     if (bufsiz == -57) {
