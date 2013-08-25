@@ -60,7 +60,17 @@ sntp mysntp = sntp(NULL, "time.nist.gov", (short)(-5 * 60), (short)(-4 * 60), tr
 //   Low order 32-bits is fractional seconds
 SNTP_Timestamp_t now;
 
-// Type NetTime_t contains NTP time broken out to human-oriented values://	uint16_t millis; ///< Milliseconds after the second (0..999)//	uint8_t	 sec;    ///< Seconds after the minute (0..59)//	uint8_t	 min;    ///< Minutes after the hour (0..59)//	uint8_t	 hour;   ///< Hours since midnight (0..23)//	uint8_t	 mday;   ///< Day of the month (1..31)//	uint8_t	 mon;    ///< Months since January (0..11)//	uint16_t year;   ///< Year.//	uint8_t	 wday;	 ///< Days since Sunday (0..6)//	uint8_t	 yday;   ///< Days since January 1 (0..365)//	bool	 isdst;  ///< Daylight savings time flag, currently not supported	
+// Type NetTime_t contains NTP time broken out to human-oriented values:
+//	uint16_t millis; ///< Milliseconds after the second (0..999)
+//	uint8_t	 sec;    ///< Seconds after the minute (0..59)
+//	uint8_t	 min;    ///< Minutes after the hour (0..59)
+//	uint8_t	 hour;   ///< Hours since midnight (0..23)
+//	uint8_t	 mday;   ///< Day of the month (1..31)
+//	uint8_t	 mon;    ///< Months since January (0..11)
+//	uint16_t year;   ///< Year.
+//	uint8_t	 wday;	 ///< Days since Sunday (0..6)
+//	uint8_t	 yday;   ///< Days since January 1 (0..365)
+//	bool	 isdst;  ///< Daylight savings time flag, currently not supported	
 NetTime_t timeExtract;
 
 /**************************************************************************/
@@ -129,7 +139,7 @@ void setup(void)
   mysntp.ExtractNTPTime(mysntp.NTPGetTime(&now, true), &timeExtract);
 
   Serial.print(timeExtract.hour); Serial.print(F(":")); Serial.print(timeExtract.min); Serial.print(F(":"));Serial.print(timeExtract.sec); Serial.print(F("."));Serial.println(timeExtract.millis);
-  Serial.print(timeExtract.mon); Serial.print(F("-")); Serial.print(timeExtract.mday); Serial.print(F("-"));Serial.println(timeExtract.year);
+  Serial.print(timeExtract.mon + 1); Serial.print(F("-")); Serial.print(timeExtract.mday); Serial.print(F("-"));Serial.println(timeExtract.year);
   Serial.print(F("Day of week: ")); Serial.print(timeExtract.wday); Serial.print(F(", day of year: ")); Serial.println(timeExtract.yday); 
 
   /* You need to make sure to clean up after yourself or the CC3000 can freak out */
